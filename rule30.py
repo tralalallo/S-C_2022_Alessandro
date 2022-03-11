@@ -15,11 +15,12 @@ def generate_state():
 
 def evolve(state):
     evolved_list = list(state)
+    rules_list = list(rule30.keys())
     for i in range(20):
-        if state[i:i+3] == "...":
-            evolved_list[i] = rule30.get("...")
-        elif state[i:i+3] == ".0.":
-            evolved_list[i] = rule30.get(".0.")
+        for j in range(8):
+            if state[i:i+3] == rules_list[j]:
+                evolved_list[i] = rule30.get(rules_list[j])
+
     evolved_state = "".join(evolved_list)
     return evolved_state
 
@@ -49,5 +50,6 @@ def test_same_state_lenght():
     assert len(old_state) == len(new_state)
 ##################################
 #main program section
-
-print(simulation(10))
+evolution = simulation(10)
+for i in evolution:
+    print(i)
