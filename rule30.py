@@ -1,4 +1,5 @@
-#dictionaries section
+# -*- coding: UTF-8 -*-
+#global section
 rule30 = {"███": '░',
           "██░": '░',
           "█░█": '░',
@@ -8,18 +9,26 @@ rule30 = {"███": '░',
           "░█░": '█',
           "░░█": '█',
          }
+n_blocks = 31
 ###############################
 #function section
 def generate_state():
-    return "░░░░░░░░░░░█░░░░░░░░░░░"
+    n_whites = n_blocks-1 #excluding the black block
+    generated_list = ["█"]
+    for i in range(n_whites):
+        if i <= n_whites/2:
+            generated_list.insert(0,"░")
+        else:
+            generated_list.append("░")
+    generated_state = "".join(generated_list)
+    return generated_state
 
 def evolve(state):
     evolved_list = list(state)
-    rules_list = list(rule30.keys())
-    for i in range(20):
-        for j in range(8):
-            if state[i:i+3] == rules_list[j]:
-                evolved_list[i] = rule30.get(rules_list[j])
+    for i in range(n_blocks):
+        for j in rule30:
+            if state[i-1:i+2] == j:
+                evolved_list[i] = rule30[j]
 
     evolved_state = "".join(evolved_list)
     return evolved_state
@@ -38,16 +47,31 @@ def simulation(nsteps):
 #test section
 def test_generation_valid_state():
     state = generate_state()
-    assert set(state) == {'.', '0'}
+    assert set(state) == {'░', '█'}
 
 def test_generation_single_alive():
     state = generate_state()
-    num_of_0 = sum(1 for i in state if i=='0')
-    assert num_of_0 == 1
+    num_of_blacks = sum(1 for i in state if i=='█')
+    assert num_of_blacks == 1
 def test_same_state_lenght():
     old_state = generate_state()
     new_state = evolve(old_state)
     assert len(old_state) == len(new_state)
+def test_same_whites():
+    old_state = generate_state()
+    n_whites_left = 0
+    n_whites_right = 0
+    for i in range(len(old_state)):
+        if old_state[i:i+1] == "█":
+            break
+        else:
+            n_whites_left = n_whites_left + 1
+    for i in range(len(old_state)):
+        if old_state[len(old_state)-i-1:len(old_state)-i] == "█":
+            break
+        else:
+            n_whites_right = n_whites_right + 1
+    assert n_whites_left == n_whites_right
 ##################################
 #main program section
 evolution = simulation(10)
