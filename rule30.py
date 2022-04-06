@@ -1,16 +1,17 @@
+#importing binary_repr and using it to generate Wolfram's rules
+#from a generic number_of_rule
 from numpy import binary_repr
-
 generic_rule_base = {"111": '',
-          "110": '',
-          "101": '',
-          "100": '',
-          "011": '',
-          "010": '',
-          "001": '',
-          "000": '',
-         }
+                     "110": '',
+                     "101": '',
+                     "100": '',
+                     "011": '',
+                     "010": '',
+                     "001": '',
+                     "000": '',
+                     }
 def rule_in_use():
-    number_of_rule = 3 #change this number to change rule
+    number_of_rule = 30 #change this to change rule
     position = 0
     this_rule = generic_rule_base
     binary_rule = binary_repr(number_of_rule,width=8)
@@ -20,15 +21,15 @@ def rule_in_use():
     return this_rule
 
 ###############################
-#function section
-def number_of_blocks():
-    n_blocks = 31 #modify this value to change lenght of lines
-    if n_blocks % 2 == 0:
-        n_blocks = n_blocks + 1   #condition for simmetry
-    return n_blocks
+#actual cellular automata simulation from now on
+#functions
 
 def generate_state():
-    n_whites = number_of_blocks()-1 #excluding the black block
+    n_blocks = 31 #choose line lenght
+    #making it symmetrical
+    if n_blocks % 2 == 0:
+        n_blocks = n_blocks + 1
+    n_whites = n_blocks-1 #excluding the black block
     generated_list = ["1"]
     for i in range(n_whites):
         if i < n_whites/2:
@@ -59,7 +60,8 @@ def simulation(nsteps):
     return states_seq
 
 ##################################
-#test section
+#tests
+
 def test_generation_valid_state():
     state = generate_state()
     assert set(state) == {'1', '0'}
@@ -88,8 +90,8 @@ def test_same_whites():
             n_whites_right = n_whites_right + 1
     assert n_whites_left == n_whites_right
 ##################################
-#main program section
-rule_in_use()
+#main program
+
 evolution = simulation(10)
 for line in evolution:
     printed_line = ""
